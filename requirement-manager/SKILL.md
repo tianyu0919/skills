@@ -1,8 +1,17 @@
 ---
-
 name: "requirement-manager"
 description: "Manages requirements by creating specs in the sdd folder for new requirements, and recording changes for existing ones. Invoke when adding or modifying requirements."
-
+version: "1.0.0"
+author: "tianyu0919"
+tags:
+  - requirements
+  - sdd
+  - specification
+  - project-management
+  - documentation
+  - kanban
+  - dashboard
+category: "project-management"
 ---
 
 # Requirement Manager

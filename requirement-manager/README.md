@@ -79,4 +79,4 @@ You don't need to run any commands manually! Simply ask the AI:
 > or
 > "Show me the kanban board"
 
-The AI will automatically start the background server and provide you with a preview link (typically **http://localhost:3030**).
+The AI will automatically start the background server and provide you with a preview link (typically **http://localhost:3030** ).
