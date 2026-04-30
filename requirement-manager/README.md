@@ -61,3 +61,22 @@ You can trigger the Requirement Manager skill by making requests like:
 - **Archiving Rules**:
   - **Do NOT** archive (`archived`) a requirement simply because it is completed. Completed requirements should remain in the active `sdd/specs/` directory as live documentation of the current system architecture.
   - **ONLY** move a feature to the `sdd/archive/` directory and update the global registry if you **explicitly request** to archive it, or if the feature has been completely deprecated/replaced by a newer system.
+
+## 📊 Live Kanban Dashboard
+
+Requirement Manager includes a built-in, zero-dependency Node.js script to visualize your requirements as a live Kanban board.
+
+### ✨ Dashboard Features
+- **Real-Time Sync (SSE)**: Automatically and instantly syncs any Markdown file changes to the board without manual refreshing.
+- **Rich Details Modal**: Click on any requirement card to read its full `proposal`, `design`, `spec`, and `tasks` parsed as beautiful Markdown directly in the browser.
+- **Nested Subtasks**: Optimizations and changes are visually nested under their parent requirements.
+- **Instant Search**: Real-time filtering by requirement name, dependencies, or subtasks.
+- **i18n Support**: Seamless toggle between English and Chinese interfaces.
+
+You don't need to run any commands manually! Simply ask the AI:
+
+> "Open the requirements dashboard"
+> or
+> "Show me the kanban board"
+
+The AI will automatically start the background server and provide you with a preview link (typically **http://localhost:3030**).

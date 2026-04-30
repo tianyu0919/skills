@@ -56,6 +56,17 @@ Whenever you create or modify a requirement, you MUST update the `sdd/project.md
 - DO NOT automatically archive (`archived`) a requirement just because it is completed. Completed requirements stay in the active `sdd/specs/` directory as active documentation of the current system.
 - Only archive a requirement (move it to `sdd/archive/` and update `sdd/project.md`) if the user EXPLICITLY asks to archive it, or if the feature has been completely deprecated/replaced by a newer system.
 
+### 6. Opening the Dashboard
+
+If the user asks to see the dashboard, kanban board, or wants to visualize the requirements:
+1. Run the `scripts/dashboard.js` script using the terminal tool:
+   ```bash
+   node .trae/skills/requirement-manager/scripts/dashboard.js
+   ```
+2. Set the command to run non-blocking (in the background).
+3. Once the server starts, inform the user that they can view the dashboard by opening `http://localhost:3030` in their browser, or use the OpenPreview tool if available.
+   *Note: Let the user know the dashboard features Real-Time Sync (SSE), Search/Filter, Interactive Details Modals (click cards to read markdown), Nested Subtasks, and i18n (EN/ZH).*
+
 ## Steps to Execute
 
 1. **Understand the Requirement**: Clarify with the user what the requirement or change entails.
