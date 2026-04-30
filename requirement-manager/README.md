@@ -1,64 +1,63 @@
-# Trae Skill: Requirement Manager (需求管理技能)
+# Trae Skill: Requirement Manager
 
-Requirement Manager 是一个智能的 AI Agent Skill，专为 AI 辅助编程设计。它旨在强制执行“文档先行 (Specification-First, SDD)”的工作流，确保在编写任何代码之前，自动生成标准化、可预测且高度结构化的需求文档。
+[English](README.md) | [中文](README_zh.md)
 
-## ✨ 核心特性
+Requirement Manager is an intelligent AI Agent Skill designed for AI-assisted programming. It is built to enforce a "Specification-First (SDD)" workflow, ensuring that standardized, predictable, and highly structured requirement documents are automatically generated before any code is written.
 
-- **4阶段规范框架**：自动生成 `proposal.md`（提案）、`design.md`（设计）、`spec.md`（规格）和 `tasks.md`（任务）。
-- **机器可读元数据**：在 `spec.md` 中注入 YAML Frontmatter，使 AI Agent 能够瞬间理解代码影响范围 (impact radius) 和依赖关系 (dependencies)。
-- **全局项目注册表**：自动维护 `sdd/project.md` 文件，作为所有活跃和已归档特性的集中索引。
-- **零上下文丢失**：通过标准化的文档结构，让 AI 在长时间的编码会话中保持专注，有效防止架构漂移。
+## ✨ Core Features
 
-## 📂 目录结构与规范说明
+- **4-Stage Specification Framework**: Automatically generates `proposal.md`, `design.md`, `spec.md`, and `tasks.md`.
+- **Machine-Readable Metadata**: Injects YAML Frontmatter into `spec.md`, enabling the AI Agent to instantly understand the impact radius and dependencies.
+- **Global Project Registry**: Automatically maintains an `sdd/project.md` file as a centralized index for all active and archived features.
+- **Zero Context Loss**: By utilizing a standardized document structure, it keeps the AI focused during long coding sessions, effectively preventing architectural drift.
 
-该技能通过在项目根目录下的 `sdd` 文件夹中管理需求规范来实现工作流。
+## 📂 Directory Structure & Conventions
 
-### 1. 新需求 (New Requirements)
-添加新需求时，会在 `sdd/specs/<需求名称>/` 下创建目录。每个目录必须遵循 SDD 标准结构，包含以下四个核心文件：
+This skill manages the workflow through the `sdd` folder located in the root directory of your project.
 
-- **`proposal.md` (提案)**：记录上下文、现状与痛点、功能价值主张、替代方案考虑以及成功衡量指标。
-- **`design.md` (设计)**：记录技术架构、数据模型与接口定义、数据流转以及异常处理策略。
-- **`spec.md` (规格)**：详细的产品规格说明，包含 YAML Frontmatter（标识状态、影响范围和依赖）以及功能点细节和验收清单 (Acceptance Checklist)。
-- **`tasks.md` (任务)**：将需求拆解为可执行的原子任务看板，按阶段划分（如基础脚手架、核心逻辑、UI 交互等）。
+### 1. New Requirements
+When adding a new requirement, a directory will be created under `sdd/specs/<requirement-name>/`. Each directory must follow the SDD standard structure and contain these four core files:
 
-### 2. 现有需求变更 (Modifying Existing Requirements)
-修改现有需求时，**不会**覆盖原始规范，而是在现有需求的 `changes` 目录下创建新的变更记录：
-`sdd/specs/<现有需求名称>/changes/<变更名称>/`
+- **`proposal.md`**: Context, current pain points, feature value proposition, alternative considerations, and success metrics.
+- **`design.md`**: Technical architecture, data models, interface definitions, data flow, and error-handling strategies.
+- **`spec.md`**: Detailed product specifications containing YAML Frontmatter (for status, impact radius, and dependencies), feature details, and an Acceptance Checklist.
+- **`tasks.md`**: Breaks down the requirement into an executable, atomic task board grouped by phases (e.g., scaffolding, core logic, UI interaction).
 
-变更目录同样需要包含上述的四个核心文件（`proposal.md`, `design.md`, `spec.md`, `tasks.md`），以清晰追踪变更的动机和实现细节。
+### 2. Modifying Existing Requirements
+When modifying an existing requirement, the original specification is **not** overwritten. Instead, a new change record is created under the existing requirement's `changes` directory:
+`sdd/specs/<existing-requirement-name>/changes/<change-name>/`
 
-## 🛠 安装指南
+The change directory must also contain the four core files (`proposal.md`, `design.md`, `spec.md`, `tasks.md`) to clearly track the motivation and implementation details of the change.
 
-1. 在你的项目根目录下，如果不存在，请先创建 `.trae/skills/` (或 `.AGENTS/skills/`) 目录。
-2. 将本仓库克隆或放置到该目录中：
+## 🛠 Installation Guide
+
+Run the following command in your project's root directory to install the skill automatically:
 
 ```bash
-mkdir -p .trae/skills/
-cd .trae/skills/
-git clone <repository-url> requirement-manager
+npx skills add https://github.com/tianyu0919/skills --skills requirement-manager
 ```
 
-## 🚀 如何使用 (Workflow)
+## 🚀 How to Use (Workflow)
 
-当用户提出以下请求时，即可触发 Requirement Manager 技能：
-- “添加一个新需求：...”
-- “修改现有功能：...”
-- “为新特性创建需求文档...”
+You can trigger the Requirement Manager skill by making requests like:
+- "Add a new requirement: ..."
+- "Modify existing feature: ..."
+- "Create a requirement document for the new feature..."
 
-### 执行步骤
+### Execution Steps
 
-1. **理解需求**：AI 会与用户澄清需求或变更的具体内容。
-2. **确定范围**：判断这是一个全新需求还是对现有功能的变更。
-3. **生成结构**：AI 会读取本技能 `references/` 目录下的模板，在 `sdd/specs/` 目录下生成对应的四个 Markdown 文件。
-4. **更新全局注册表**：在 `sdd/project.md` 中新增或更新该特性的条目。
-5. **填充内容**：根据用户描述，AI 自动编写四个文档的具体内容。
-6. **用户确认**：AI 会请求用户检查生成的规范文档，并在获得确认后，进入后续的开发阶段。
+1. **Understand**: The AI clarifies the specific details of the requirement or change with you.
+2. **Scope**: Determines whether this is an entirely new requirement or a modification to an existing feature.
+3. **Generate Structure**: The AI reads the templates from this skill's `references/` directory and generates the corresponding four Markdown files in the `sdd/specs/` directory.
+4. **Update Registry**: Adds or updates the feature's entry in the global `sdd/project.md`.
+5. **Populate Content**: The AI automatically writes the specific content of the four documents based on your description.
+6. **User Confirmation**: The AI asks you to review the generated specification documents before proceeding to the development phase.
 
-## 📌 任务状态与生命周期管理
+## 📌 Task Status & Lifecycle Management
 
-- **任务跟踪**：在 `tasks.md` 和 `spec.md` 中的所有任务和验收清单，默认使用未完成状态的 Markdown 任务列表 (`- [ ]`)。
-- **状态更新**：当某个任务完成时，AI 会将其更新为已完成 (`- [x]`)。
-- **特性闭环**：当一个需求的所有任务和验收清单都已完成 (`- [x]`) 时，必须将 `spec.md` YAML Frontmatter 和 `sdd/project.md` 注册表中的状态更新为 `completed`。
-- **归档规则 (Archiving)**：
-  - **不要**仅仅因为需求已完成就将其归档 (`archived`)。已完成的需求应当保留在活跃的 `sdd/specs/` 目录中，作为当前系统架构的活跃文档。
-  - **只有**当用户**明确要求**归档，或者该功能已被全新的系统完全弃用/替换时，才将其移动到 `sdd/archive/` 目录并更新全局注册表。
+- **Task Tracking**: All tasks and acceptance checklists in `tasks.md` and `spec.md` default to incomplete Markdown task lists (`- [ ]`).
+- **Status Updates**: When a task is finished, the AI updates it to completed (`- [x]`).
+- **Feature Closure**: When all tasks and checklists for a requirement are completed (`- [x]`), the status in both the `spec.md` YAML Frontmatter and the `sdd/project.md` registry must be updated to `completed`.
+- **Archiving Rules**:
+  - **Do NOT** archive (`archived`) a requirement simply because it is completed. Completed requirements should remain in the active `sdd/specs/` directory as live documentation of the current system architecture.
+  - **ONLY** move a feature to the `sdd/archive/` directory and update the global registry if you **explicitly request** to archive it, or if the feature has been completely deprecated/replaced by a newer system.
