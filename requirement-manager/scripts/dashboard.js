@@ -181,15 +181,15 @@ const HTML_TEMPLATE = `
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <style>
         :root {
-            --bg-base: #0a0a0c;
-            --card-bg: rgba(255, 255, 255, 0.03);
-            --card-border: rgba(255, 255, 255, 0.08);
-            --text-main: #f3f4f6;
-            --text-muted: #9ca3af;
+            --bg-base: #060608;
+            --card-bg: rgba(255, 255, 255, 0.02);
+            --card-border: rgba(255, 255, 255, 0.06);
+            --text-main: #f9fafb;
+            --text-muted: #8b92a1;
             
-            --accent-pending: #f59e0b;
-            --accent-progress: #3b82f6;
-            --accent-completed: #10b981;
+            --accent-pending: #fcd34d;
+            --accent-progress: #60a5fa;
+            --accent-completed: #34d399;
             --accent-archived: #6b7280;
             
             --font-display: 'Clash Display', sans-serif;
@@ -203,11 +203,14 @@ const HTML_TEMPLATE = `
             background-color: var(--bg-base);
             color: var(--text-main);
             margin: 0;
-            padding: 40px;
-            min-height: 100vh;
+            padding: 0;
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
             background-image: 
-                radial-gradient(circle at 15% 50%, rgba(59, 130, 246, 0.15), transparent 25%),
-                radial-gradient(circle at 85% 30%, rgba(139, 92, 246, 0.15), transparent 25%);
+                radial-gradient(circle at 0% 0%, rgba(96, 165, 250, 0.08), transparent 40%),
+                radial-gradient(circle at 100% 100%, rgba(52, 211, 153, 0.05), transparent 40%);
             background-attachment: fixed;
         }
 
@@ -215,18 +218,22 @@ const HTML_TEMPLATE = `
             display: flex;
             justify-content: space-between;
             align-items: flex-end;
-            margin-bottom: 48px;
+            padding: 32px 40px 24px 40px;
             border-bottom: 1px solid var(--card-border);
-            padding-bottom: 24px;
+            flex-shrink: 0;
+            background: rgba(6, 6, 8, 0.8);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            z-index: 10;
         }
 
         h1 {
             font-family: var(--font-display);
-            font-size: 2.5rem;
+            font-size: 2.2rem;
             font-weight: 600;
             margin: 0;
-            letter-spacing: -0.02em;
-            background: linear-gradient(to right, #fff, #9ca3af);
+            letter-spacing: -0.03em;
+            background: linear-gradient(135deg, #fff 0%, #a1a1aa 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
@@ -261,12 +268,14 @@ const HTML_TEMPLATE = `
         }
 
         .kanban {
+            flex: 1;
+            min-height: 0;
             display: flex;
             gap: 24px;
             overflow-x: auto;
-            padding-bottom: 40px;
-            min-height: 70vh;
-            align-items: flex-start;
+            overflow-y: hidden;
+            padding: 32px 40px 40px 40px;
+            align-items: stretch;
         }
 
         .kanban::-webkit-scrollbar {
@@ -284,21 +293,74 @@ const HTML_TEMPLATE = `
         .column {
             flex: 1;
             min-width: 320px;
+            max-height: 100%;
             display: flex;
             flex-direction: column;
-            gap: 16px;
+            background: rgba(255,255,255,0.01);
+            border: 1px solid rgba(255,255,255,0.04);
+            border-radius: 16px;
+            padding: 20px 16px 16px 20px;
+            position: relative;
         }
 
-        .column h2 {
+        .col-pending { --col-theme: var(--accent-pending); }
+        .col-in_progress { --col-theme: var(--accent-progress); }
+        .col-completed { --col-theme: var(--accent-completed); }
+        .col-archived { --col-theme: var(--accent-archived); }
+
+        .column-header {
+            margin: 0 0 20px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0;
+            flex-shrink: 0;
+        }
+
+        .column-title {
             font-family: var(--font-display);
             font-size: 1.1rem;
             font-weight: 500;
             color: var(--text-main);
-            margin: 0 0 8px 0;
             display: flex;
-            justify-content: space-between;
             align-items: center;
-            padding: 0 4px;
+            letter-spacing: 0.02em;
+        }
+
+        .column-dot {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--col-theme);
+            margin-right: 10px;
+            box-shadow: 0 0 8px var(--col-theme);
+        }
+
+        .column-content {
+            flex: 1;
+            min-height: 0;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            padding-right: 8px;
+            margin-right: -8px; /* Offset for padding */
+            padding-bottom: 20px; /* Prevent last card from being cut off by scrollbar/container */
+        }
+
+        .column-content::-webkit-scrollbar {
+            width: 6px;
+        }
+        .column-content::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .column-content::-webkit-scrollbar-thumb {
+            background: rgba(255,255,255,0.08);
+            border-radius: 4px;
+        }
+        .column-content::-webkit-scrollbar-thumb:hover {
+            background: rgba(255,255,255,0.15);
         }
 
         .count-badge {
@@ -310,49 +372,31 @@ const HTML_TEMPLATE = `
         }
 
         .card {
-            background: var(--card-bg);
-            border: 1px solid var(--card-border);
-            border-radius: 16px;
-            padding: 20px;
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            background: rgba(255,255,255,0.02);
+            border: 1px solid rgba(255,255,255,0.05);
+            border-radius: 12px;
+            padding: 16px;
+            transition: all 0.2s ease;
             position: relative;
+            flex-shrink: 0;
+            animation: slideUp 0.4s ease backwards;
             overflow: hidden;
-            animation: slideUp 0.5s ease backwards;
-        }
-
-        @keyframes slideUp {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
         }
 
         .card:hover {
-            transform: translateY(-4px);
-            border-color: rgba(255,255,255,0.2);
-            box-shadow: 0 12px 24px rgba(0,0,0,0.4);
+            transform: translateY(-2px);
+            border-color: rgba(255,255,255,0.1);
+            background: rgba(255,255,255,0.03);
+            box-shadow: 0 8px 24px -4px rgba(0,0,0,0.5);
         }
-        
-        .card::before {
-            content: '';
-            position: absolute;
-            top: 0; left: 0;
-            width: 3px;
-            height: 100%;
-            background: var(--col-accent, #fff);
-            opacity: 0.8;
-        }
-
-        .col-pending { --col-accent: var(--accent-pending); }
-        .col-in_progress { --col-accent: var(--accent-progress); }
-        .col-completed { --col-accent: var(--accent-completed); }
-        .col-archived { --col-accent: var(--accent-archived); opacity: 0.6; }
 
         .card h3 {
-            margin: 0 0 16px 0;
-            font-size: 1.1rem;
-            font-weight: 600;
-            letter-spacing: 0.02em;
+            margin: 0 0 12px 0;
+            font-size: 1rem;
+            font-weight: 500;
+            letter-spacing: 0;
+            line-height: 1.4;
+            color: #fff;
         }
 
         .progress-container {
@@ -361,88 +405,121 @@ const HTML_TEMPLATE = `
 
         .progress-bar {
             height: 4px;
-            background: rgba(255,255,255,0.1);
-            border-radius: 2px;
+            background: rgba(255,255,255,0.06);
+            border-radius: 4px;
             overflow: hidden;
-            margin-bottom: 8px;
+            margin-bottom: 12px;
         }
 
         .progress-fill {
             height: 100%;
-            background: var(--col-accent);
-            box-shadow: 0 0 10px var(--col-accent);
-            transition: width 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+            background: var(--col-theme);
+            border-radius: 4px;
+            transition: width 0.5s ease;
         }
 
         .tags {
             display: flex;
             flex-wrap: wrap;
             gap: 8px;
-            margin-top: 16px;
+            margin-top: 20px;
         }
 
         .tag {
-            font-size: 0.75rem;
-            background: rgba(255,255,255,0.05);
+            font-size: 0.7rem;
+            background: transparent;
             color: var(--text-muted);
-            padding: 4px 10px;
-            border-radius: 6px;
-            border: 1px solid rgba(255,255,255,0.05);
+            padding: 4px 8px;
+            border-radius: 4px;
+            border: 1px solid rgba(255,255,255,0.1);
             display: flex;
             align-items: center;
             gap: 4px;
+            cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+
+        .tag:hover {
+            background: rgba(255,255,255,0.05);
+            color: #fff;
+            border-color: rgba(255,255,255,0.2);
+            transform: none;
+            box-shadow: none;
+        }
+
+        .tag:hover svg {
+            stroke: #fff;
         }
 
         /* Subtasks UI */
         .subtasks-container {
-            margin-top: 20px;
-            padding-top: 16px;
-            border-top: 1px dashed rgba(255,255,255,0.1);
+            margin-top: 16px;
+            padding-top: 12px;
+            border-top: 1px solid rgba(255,255,255,0.04);
         }
         
         .subtasks-header {
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             color: var(--text-muted);
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            margin-bottom: 12px;
+            margin-bottom: 8px;
             display: flex;
             align-items: center;
             gap: 6px;
+            cursor: pointer;
+            user-select: none;
+            transition: color 0.2s;
+        }
+
+        .subtasks-header:hover {
+            color: #fff;
+        }
+
+        .subtask-toggle-icon {
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .subtasks-list {
+            display: grid;
+            grid-template-rows: 0fr;
+            transition: grid-template-rows 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .subtasks-list.open {
+            grid-template-rows: 1fr;
+        }
+
+        .subtasks-list-inner {
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
         }
 
         .subtask-item {
-            background: rgba(255,255,255,0.02);
-            border: 1px solid rgba(255,255,255,0.04);
-            border-radius: 8px;
-            padding: 10px 12px;
-            margin-bottom: 8px;
+            background: rgba(255, 255, 255, 0.01);
+            border: 1px solid rgba(255, 255, 255, 0.03);
+            border-radius: 6px;
+            padding: 10px;
             display: flex;
             flex-direction: column;
             gap: 6px;
             transition: all 0.2s;
-            position: relative;
-            overflow: hidden;
+            cursor: pointer;
         }
 
         .subtask-item:hover {
-            background: rgba(255,255,255,0.05);
-            border-color: rgba(255,255,255,0.1);
-            transform: translateX(4px);
+            background: rgba(255, 255, 255, 0.03);
+            border-color: rgba(255, 255, 255, 0.08);
         }
 
-        .subtask-item::before {
-            content: '';
-            position: absolute;
-            left: 0; top: 0; bottom: 0;
-            width: 2px;
-            background: var(--sub-col-accent, rgba(255,255,255,0.2));
-        }
+        .subtask-item.status-pending { --sub-col-theme: var(--accent-pending); }
+        .subtask-item.status-in_progress { --sub-col-theme: var(--accent-progress); }
+        .subtask-item.status-completed { --sub-col-theme: var(--accent-completed); }
+        .subtask-item.status-archived { --sub-col-theme: var(--accent-archived); }
 
-        .subtask-item.status-pending { --sub-col-accent: var(--accent-pending); }
-        .subtask-item.status-in_progress { --sub-col-accent: var(--accent-progress); }
-        .subtask-item.status-completed { --sub-col-accent: var(--accent-completed); }
-        .subtask-item.status-archived { --sub-col-accent: var(--accent-archived); }
+        .subtask-item .progress-fill {
+            background: var(--sub-col-theme);
+        }
 
         .subtask-name {
             font-size: 0.9rem;
@@ -457,24 +534,25 @@ const HTML_TEMPLATE = `
 
         /* Task List Styles */
         .task-toggle {
-            background: rgba(255,255,255,0.03);
+            background: transparent;
             border: 1px solid rgba(255,255,255,0.05);
-            color: var(--text-main);
+            color: var(--text-muted);
             cursor: pointer;
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             padding: 8px 12px;
-            border-radius: 8px;
+            border-radius: 6px;
             width: 100%;
             text-align: left;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            transition: background 0.2s;
+            transition: all 0.2s;
             font-family: var(--font-body);
         }
 
         .task-toggle:hover {
-            background: rgba(255,255,255,0.08);
+            background: rgba(255,255,255,0.02);
+            color: #fff;
         }
 
         .task-toggle .toggle-icon {
@@ -489,7 +567,7 @@ const HTML_TEMPLATE = `
         .task-list-wrapper {
             display: grid;
             grid-template-rows: 0fr;
-            transition: grid-template-rows 0.3s ease-out;
+            transition: grid-template-rows 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .task-list-wrapper.open {
@@ -507,7 +585,7 @@ const HTML_TEMPLATE = `
             padding: 12px 4px 4px 4px;
             display: flex;
             flex-direction: column;
-            gap: 10px;
+            gap: 12px;
         }
 
         .task-item {
@@ -527,15 +605,15 @@ const HTML_TEMPLATE = `
             width: 16px;
             height: 16px;
             border-radius: 4px;
-            background: rgba(255,255,255,0.1);
+            background: rgba(0,0,0,0.3);
             border: 1px solid rgba(255,255,255,0.2);
             flex-shrink: 0;
             transition: all 0.2s;
         }
 
         .task-item.is-completed .task-checkbox {
-            background: var(--accent-completed);
-            border-color: var(--accent-completed);
+            background: var(--col-theme);
+            border-color: var(--col-theme);
         }
         
         .task-item.is-completed .task-checkbox::after {
@@ -1006,8 +1084,16 @@ const HTML_TEMPLATE = `
                     : \`<div class="empty-state">\${t('noTasks')}</div>\`;
 
                 colEl.innerHTML = \`
-                    <h2>\${t(col.id)} <span class="count-badge">\${reqs.length}</span></h2>
-                    \${cardsHtml}
+                    <div class="column-header">
+                        <div class="column-title">
+                            <span class="column-dot"></span>
+                            \${t(col.id)}
+                        </div>
+                        <span class="count-badge">\${reqs.length}</span>
+                    </div>
+                    <div class="column-content">
+                        \${cardsHtml}
+                    </div>
                 \`;
                 kanban.appendChild(colEl);
             });
@@ -1015,7 +1101,7 @@ const HTML_TEMPLATE = `
 
         function createCard(req, index) {
             let deps = (req.dependencies || []).filter(d => d && d.toLowerCase() !== 'none');
-            let tagsHtml = deps.map(d => \`<span class="tag"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg> \${d}</span>\`).join('');
+            let tagsHtml = deps.map(d => \`<span class="tag" onclick="event.stopPropagation(); setFilter('\${d.replace(/'/g, "\\\\'")}')"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg> \${d}</span>\`).join('');
             
             let tasksHtml = '';
             if (req.progress.items && req.progress.items.length > 0) {
@@ -1054,7 +1140,7 @@ const HTML_TEMPLATE = `
             let subtasksSection = '';
             if (req.subtasks && req.subtasks.length > 0) {
                 const subHtml = req.subtasks.map(sub => \`
-                    <div class="subtask-item status-\${sub.status}" onclick="event.stopPropagation(); openModal('\${sub.id}', '\${sub.name.replace(/'/g, "\\'")}')">
+                    <div class="subtask-item status-\${sub.status}" onclick="event.stopPropagation(); openModal('\${sub.id}', '\${sub.name.replace(/'/g, "\\\\'")}')">
                         <div class="subtask-name">\${sub.name}</div>
                         <div class="subtask-progress-text">
                             \${sub.progress.completed} / \${sub.progress.total} \${t('tasks')} (\${sub.progress.percentage}%) • \${t(sub.status)}
@@ -1065,13 +1151,19 @@ const HTML_TEMPLATE = `
                     </div>
                 \`).join('');
                 
+                const isSubOpen = window.openSubtasks && window.openSubtasks[req.id];
+                
                 subtasksSection = \`
                     <div class="subtasks-container">
-                        <div class="subtasks-header">
-                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                        <div class="subtasks-header" onclick="event.stopPropagation(); toggleSubtasks('\${req.id}')">
+                            <svg class="subtask-toggle-icon" id="subtasks-icon-\${req.id}" style="transform: \${isSubOpen ? 'rotate(180deg)' : 'rotate(0deg)'}" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
                             \${t('optimizations')} (\${req.subtasks.length})
                         </div>
-                        \${subHtml}
+                        <div class="subtasks-list \${isSubOpen ? 'open' : ''}" id="subtasks-\${req.id}">
+                            <div class="subtasks-list-inner">
+                                \${subHtml}
+                            </div>
+                        </div>
                     </div>
                 \`;
             }
@@ -1092,6 +1184,31 @@ const HTML_TEMPLATE = `
         }
 
         window.openTasks = {};
+        window.openSubtasks = {};
+
+        function setFilter(query) {
+            const input = document.getElementById('search-input');
+            input.value = query;
+            currentSearchQuery = query.toLowerCase().trim();
+            if (window.lastData) {
+                renderBoard(filterRequirements(window.lastData, currentSearchQuery));
+            }
+        }
+        
+        function toggleSubtasks(reqId) {
+            const list = document.getElementById(\`subtasks-\${reqId}\`);
+            const icon = document.getElementById(\`subtasks-icon-\${reqId}\`);
+            
+            if (list.classList.contains('open')) {
+                list.classList.remove('open');
+                icon.style.transform = 'rotate(0deg)';
+                window.openSubtasks[reqId] = false;
+            } else {
+                list.classList.add('open');
+                icon.style.transform = 'rotate(180deg)';
+                window.openSubtasks[reqId] = true;
+            }
+        }
         
         function toggleTasks(event, reqId) {
             if (event) event.stopPropagation();
