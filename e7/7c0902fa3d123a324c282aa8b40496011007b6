@@ -1,0 +1,365 @@
+smart-requirement-workflow/SKILL.md
+  a7ac1f48ee006517 1-3,5-206 gitai:{"mixed_line_ranges":[],"operations":[{"operation_id":"6a05d69fc8d0e4501922045e","tool_type":"agent","tool_id":"SearchReplace","line_ranges":[{"Range":[1,3]},{"Range":[5,206]}]}]}
+  bf1485307753c4cb 4 gitai:{"mixed_line_ranges":[],"operations":[{"operation_id":"6a05d768c8d0e4501922048a","tool_type":"agent","tool_id":"SearchReplace","line_ranges":[{"Single":4}]}]}
+smart-requirement-workflow/references/checklist.template.md
+  a7ac1f48ee006517 1-23 gitai:{"mixed_line_ranges":[],"operations":[{"operation_id":"6a05d69fc8d0e4501922045e","tool_type":"agent","tool_id":"SearchReplace","line_ranges":[{"Range":[1,23]}]}]}
+smart-requirement-workflow/references/tasks.template.md
+  a7ac1f48ee006517 1-25 gitai:{"mixed_line_ranges":[],"operations":[{"operation_id":"6a05d69fc8d0e4501922045e","tool_type":"agent","tool_id":"SearchReplace","line_ranges":[{"Range":[1,25]}]}]}
+smart-requirement-workflow/scripts/dashboard.js
+  a7ac1f48ee006517 933-1333 gitai:{"mixed_line_ranges":[],"operations":[{"operation_id":"6a05d69fc8d0e4501922045e","tool_type":"agent","tool_id":"SearchReplace","line_ranges":[{"Range":[933,1333]}]}]}
+smart-requirement-workflow/references/proposal.template.md
+  a7ac1f48ee006517 1-21 gitai:{"mixed_line_ranges":[],"operations":[{"operation_id":"6a05d69fc8d0e4501922045e","tool_type":"agent","tool_id":"SearchReplace","line_ranges":[{"Range":[1,21]}]}]}
+smart-requirement-workflow/README_zh.md
+  a7ac1f48ee006517 1-103 gitai:{"mixed_line_ranges":[],"operations":[{"operation_id":"6a05d69fc8d0e4501922045e","tool_type":"agent","tool_id":"SearchReplace","line_ranges":[{"Range":[1,103]}]}]}
+smart-requirement-workflow/references/design.template.md
+  a7ac1f48ee006517 1-26 gitai:{"mixed_line_ranges":[],"operations":[{"operation_id":"6a05d69fc8d0e4501922045e","tool_type":"agent","tool_id":"SearchReplace","line_ranges":[{"Range":[1,26]}]}]}
+smart-requirement-workflow/references/spec.template.md
+  a7ac1f48ee006517 1-50 gitai:{"mixed_line_ranges":[],"operations":[{"operation_id":"6a05d69fc8d0e4501922045e","tool_type":"agent","tool_id":"SearchReplace","line_ranges":[{"Range":[1,50]}]}]}
+smart-requirement-workflow/README.md
+  a7ac1f48ee006517 1-99 gitai:{"mixed_line_ranges":[],"operations":[{"operation_id":"6a05d69fc8d0e4501922045e","tool_type":"agent","tool_id":"SearchReplace","line_ranges":[{"Range":[1,99]}]}]}
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.3.4",
+  "base_commit_sha": "e77c0902fa3d123a324c282aa8b40496011007b6",
+  "prompts": {
+    "a7ac1f48ee006517": {
+      "agent_id": {
+        "tool": "trae",
+        "id": "6a02f68c57c9a091e92adde6",
+        "model": "DeepSeek-V4-Pro__dev"
+      },
+      "human_author": "Tianyu0919 <1141049271@qq.com>",
+      "messages": [],
+      "total_additions": 781,
+      "total_deletions": 316,
+      "accepted_lines": 680,
+      "overriden_lines": 0
+    },
+    "bf1485307753c4cb": {
+      "agent_id": {
+        "tool": "trae",
+        "id": "6a05d161c8d0e45019220381",
+        "model": "DeepSeek-V4-Pro__dev"
+      },
+      "human_author": "Tianyu0919 <1141049271@qq.com>",
+      "messages": [],
+      "total_additions": 1,
+      "total_deletions": 1,
+      "accepted_lines": 1,
+      "overriden_lines": 0
+    }
+  },
+  "attestation_metadata": {
+    "smart-requirement-workflow/README.md": [
+      {
+        "hash": "a7ac1f48ee006517",
+        "line_ranges": [
+          {
+            "Range": [
+              1,
+              99
+            ]
+          }
+        ],
+        "mixed_line_ranges": [],
+        "operations": [
+          {
+            "operation_id": "6a05d69fc8d0e4501922045e",
+            "tool_type": "agent",
+            "tool_id": "SearchReplace",
+            "line_ranges": [
+              {
+                "Range": [
+                  1,
+                  99
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "smart-requirement-workflow/README_zh.md": [
+      {
+        "hash": "a7ac1f48ee006517",
+        "line_ranges": [
+          {
+            "Range": [
+              1,
+              103
+            ]
+          }
+        ],
+        "mixed_line_ranges": [],
+        "operations": [
+          {
+            "operation_id": "6a05d69fc8d0e4501922045e",
+            "tool_type": "agent",
+            "tool_id": "SearchReplace",
+            "line_ranges": [
+              {
+                "Range": [
+                  1,
+                  103
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "smart-requirement-workflow/SKILL.md": [
+      {
+        "hash": "a7ac1f48ee006517",
+        "line_ranges": [
+          {
+            "Range": [
+              1,
+              3
+            ]
+          },
+          {
+            "Range": [
+              5,
+              206
+            ]
+          }
+        ],
+        "mixed_line_ranges": [],
+        "operations": [
+          {
+            "operation_id": "6a05d69fc8d0e4501922045e",
+            "tool_type": "agent",
+            "tool_id": "SearchReplace",
+            "line_ranges": [
+              {
+                "Range": [
+                  1,
+                  3
+                ]
+              },
+              {
+                "Range": [
+                  5,
+                  206
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "hash": "bf1485307753c4cb",
+        "line_ranges": [
+          {
+            "Single": 4
+          }
+        ],
+        "mixed_line_ranges": [],
+        "operations": [
+          {
+            "operation_id": "6a05d768c8d0e4501922048a",
+            "tool_type": "agent",
+            "tool_id": "SearchReplace",
+            "line_ranges": [
+              {
+                "Single": 4
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "smart-requirement-workflow/references/checklist.template.md": [
+      {
+        "hash": "a7ac1f48ee006517",
+        "line_ranges": [
+          {
+            "Range": [
+              1,
+              23
+            ]
+          }
+        ],
+        "mixed_line_ranges": [],
+        "operations": [
+          {
+            "operation_id": "6a05d69fc8d0e4501922045e",
+            "tool_type": "agent",
+            "tool_id": "SearchReplace",
+            "line_ranges": [
+              {
+                "Range": [
+                  1,
+                  23
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "smart-requirement-workflow/references/design.template.md": [
+      {
+        "hash": "a7ac1f48ee006517",
+        "line_ranges": [
+          {
+            "Range": [
+              1,
+              26
+            ]
+          }
+        ],
+        "mixed_line_ranges": [],
+        "operations": [
+          {
+            "operation_id": "6a05d69fc8d0e4501922045e",
+            "tool_type": "agent",
+            "tool_id": "SearchReplace",
+            "line_ranges": [
+              {
+                "Range": [
+                  1,
+                  26
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "smart-requirement-workflow/references/proposal.template.md": [
+      {
+        "hash": "a7ac1f48ee006517",
+        "line_ranges": [
+          {
+            "Range": [
+              1,
+              21
+            ]
+          }
+        ],
+        "mixed_line_ranges": [],
+        "operations": [
+          {
+            "operation_id": "6a05d69fc8d0e4501922045e",
+            "tool_type": "agent",
+            "tool_id": "SearchReplace",
+            "line_ranges": [
+              {
+                "Range": [
+                  1,
+                  21
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "smart-requirement-workflow/references/spec.template.md": [
+      {
+        "hash": "a7ac1f48ee006517",
+        "line_ranges": [
+          {
+            "Range": [
+              1,
+              50
+            ]
+          }
+        ],
+        "mixed_line_ranges": [],
+        "operations": [
+          {
+            "operation_id": "6a05d69fc8d0e4501922045e",
+            "tool_type": "agent",
+            "tool_id": "SearchReplace",
+            "line_ranges": [
+              {
+                "Range": [
+                  1,
+                  50
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "smart-requirement-workflow/references/tasks.template.md": [
+      {
+        "hash": "a7ac1f48ee006517",
+        "line_ranges": [
+          {
+            "Range": [
+              1,
+              25
+            ]
+          }
+        ],
+        "mixed_line_ranges": [],
+        "operations": [
+          {
+            "operation_id": "6a05d69fc8d0e4501922045e",
+            "tool_type": "agent",
+            "tool_id": "SearchReplace",
+            "line_ranges": [
+              {
+                "Range": [
+                  1,
+                  25
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "smart-requirement-workflow/scripts/dashboard.js": [
+      {
+        "hash": "a7ac1f48ee006517",
+        "line_ranges": [
+          {
+            "Range": [
+              933,
+              1333
+            ]
+          }
+        ],
+        "mixed_line_ranges": [],
+        "operations": [
+          {
+            "operation_id": "6a05d69fc8d0e4501922045e",
+            "tool_type": "agent",
+            "tool_id": "SearchReplace",
+            "line_ranges": [
+              {
+                "Range": [
+                  933,
+                  1333
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "remote_transcripts": {
+    "a7ac1f48ee006517": {
+      "tool": "trae",
+      "conversation_id": "6a02f68c57c9a091e92adde6",
+      "session_id": "6a02f68c57c9a091e92adde6",
+      "status": "remote_only",
+      "message": "Remote transcript resolution is not implemented yet for TRAE prompts."
+    },
+    "bf1485307753c4cb": {
+      "tool": "trae",
+      "conversation_id": "6a05d161c8d0e45019220381",
+      "session_id": "6a05d161c8d0e45019220381",
+      "status": "remote_only",
+      "message": "Remote transcript resolution is not implemented yet for TRAE prompts."
+    }
+  }
+}
