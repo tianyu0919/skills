@@ -25,15 +25,44 @@ This skill combines rigorous requirement gathering (the "Grill") with specificat
 Use this skill when the user:
 - Proposes a new requirement or feature.
 - Asks to add a new requirement.
-- Asks to modify or update an existing requirement.
+- Asks to modify or update an existing requirement **with non-trivial scope** (multi-file, cross-module, behavior changes, or impacting public interfaces).
 - Wants to implement a previously specified requirement.
+
+## When NOT to Use This Skill
+
+Skip this skill when the change is small and self-contained, such as:
+- A single-file refactor with no behavior change.
+- A localized bug fix that does not alter contracts or interfaces.
+- Cosmetic edits (typos, comments, formatting).
+- Trivial config tweaks.
+
+**Rule of thumb**: judge by **scope and impact radius**, not by "new vs. modify". A modification that touches multiple modules, changes data models, breaks compatibility, or carries non-trivial design decisions still requires the full workflow.
 
 ## Workflow
 
 ### Phase 1: Interrogation (The "Grill")
 
+#### Quick Path (Optional Shortcut)
+
+If the user provides **all** of the following, you MAY skip the deep interrogation and proceed directly to Phase 2:
+- Clear functional scope (what the system should do)
+- Known user roles and primary user flows
+- Defined acceptance criteria or expected outcomes
+- No cross-module impacts or ambiguous edge cases
+
+**How to check**: After context gathering (step 2 below), assess if the requirement is sufficiently detailed. If yes, briefly summarize the requirement and ask: *"This seems well-defined. Should I proceed directly to spec generation, or would you like me to dig deeper into edge cases?"*
+
+If the user wants thoroughness, continue with the full interrogation below.
+
+#### Full Interrogation Process
+
 1. When the user proposes a requirement, **DO NOT** immediately write the spec.
-2. **Context Gathering**: ALWAYS use search tools to consult the codebase first. Understand the current architecture, data models, constraints, and affected modules related to the user's request.
+2. **Context Gathering**: ALWAYS use search tools to consult the codebase first. Focus areas:
+   - **Entry points**: Find the primary entry files or modules where the feature originates (ask the user if unsure about project structure conventions)
+   - **Data models**: Search for related schemas, types, interfaces, or data structures
+   - **Existing patterns**: Look for similar implementations to understand conventions
+   - **Dependencies**: Find relevant services, libraries, APIs, or external integrations
+   - **Constraints**: Check config files, environment variables, deployment setup, or any implicit limitations
 3. Act as a rigorous, unrelenting Product Manager and Systems Architect.
 4. **One Question at a Time**: NEVER bombard the user with a list of questions. You MUST ask exactly ONE piercing, specific question at a time.
 5. Wait for the user's answer. Based on their answer and the codebase context, formulate the next logical question.
@@ -57,31 +86,45 @@ Before creating new files:
 
 #### Step 2: Determine the Scope
 
-Decide if this is a completely new requirement or a change to an existing one.
+Decide if this is a completely new requirement or a change to an existing one. Then assess complexity to determine which files to generate:
+
+**Simple** (generate only `spec.md` + `tasks.md`):
+- Single module impact, no new interfaces or data models
+- 1-5 tasks
+- No breaking changes
+- No new external dependencies
+
+**Complex** (generate all 5 files: `proposal.md`, `design.md`, `spec.md`, `tasks.md`, `checklist.md`):
+- Multi-module or cross-service impact
+- New data models, interfaces, or public APIs
+- Breaking changes or compatibility concerns
+- 6+ tasks with complex dependencies
+- Requires architectural decisions or new integrations
+
+If uncertain, default to **Complex**.
 
 #### Step 3: Create the Structure
 
-Generate the necessary directories and markdown files in the appropriate location within the `sdd/specs` folder. **MUST** read and use the exact templates provided in `references/` directory of this skill.
+Generate the necessary directories and markdown files in the appropriate location within the `sdd/specs` folder. **MUST** read and use the exact templates provided in `./references/` directory of this skill.
 
-- **New Requirements**: Create a new specification directory under `sdd/specs/<requirement-name>/`. Use a **verb-led slug** for the name (e.g., `add-user-login`, `migrate-auth-to-jwt`, `refactor-payment-flow`).
-  ```
-  sdd/specs/<requirement-name>/
-  ├── proposal.md       # Context, pain points, value proposition, alternatives, success metrics
-  ├── design.md         # Technical architecture, data models, interfaces, data flow, error handling
-  ├── spec.md           # YAML Frontmatter, scope, functional requirements (SHALL/Scenario)
-  ├── tasks.md          # Ordered task board with explicit dependencies and parallel markers
-  └── checklist.md      # Standalone verification criteria
-  ```
+**Simple Requirements**: Create `spec.md` + `tasks.md` only.
+```
+sdd/specs/<requirement-name>/
+├── spec.md           # YAML Frontmatter, scope, functional requirements (SHALL/Scenario)
+└── tasks.md          # Ordered task board with explicit dependencies and parallel markers
+```
 
-- **Modifying Existing Requirements**: Create a new change record under the existing requirement's `changes` directory. Use a verb-led slug for the change name.
-  ```
-  sdd/specs/<existing-requirement-name>/changes/<change-name>/
-  ├── proposal.md
-  ├── design.md
-  ├── spec.md
-  ├── tasks.md
-  └── checklist.md
-  ```
+**Complex Requirements**: Create all 5 files.
+```
+sdd/specs/<requirement-name>/
+├── proposal.md       # Context, pain points, value proposition, alternatives, success metrics
+├── design.md         # Technical architecture, data models, interfaces, data flow, error handling
+├── spec.md           # YAML Frontmatter, scope, functional requirements (SHALL/Scenario)
+├── tasks.md          # Ordered task board with explicit dependencies and parallel markers
+└── checklist.md      # Standalone verification criteria
+```
+
+**Modifying Existing Requirements**: Create a new change record under the existing requirement's `changes` directory. Apply the same Simple/Complex rule for file generation.
 
 #### Step 4: Write `spec.md`
 
@@ -154,7 +197,7 @@ Present the generated files to the user for review. Do NOT proceed to implementa
 1. Work through `tasks.md` in order, respecting the declared dependencies.
 2. Check off each task and subtask as it is completed (`- [x]`).
 3. For tasks marked as parallelizable with no inter-dependencies, work on them concurrently when possible.
-4. If a task reveals new requirements or unforeseen complexity, pause and update `spec.md`, `tasks.md`, and `checklist.md` before continuing.
+4. If a task reveals new requirements or unforeseen complexity, follow **Exception Handling → E3** (pause, roll back status to `draft`, update spec, re-confirm, then resume).
 5. Update the status in `spec.md` YAML Frontmatter as progress is made (e.g., `draft` → `in_progress`).
 
 ---
@@ -169,6 +212,52 @@ Present the generated files to the user for review. Do NOT proceed to implementa
    - Implement the fix (Phase 4).
    - Re-verify (Phase 5).
 5. When ALL items in `checklist.md` AND all tasks in `tasks.md` are checked (`- [x]`), update the requirement status to `completed` in BOTH the `spec.md` YAML Frontmatter AND the global registry `sdd/project.md`.
+
+---
+
+## Exception Handling
+
+Defines how to recover from non-happy-path situations. Each rule maps to a specific phase and is mandatory — do not improvise alternative recoveries.
+
+### E1. User Changes Intent Mid-Interrogation (Phase 1)
+- **Signal**: User contradicts an earlier answer, or says "actually, forget that, I want X instead".
+- **Action**:
+  1. STOP the current question chain immediately.
+  2. Summarize what has been captured so far and explicitly mark which parts are now invalidated.
+  3. Restart Grill from the new intent. Do NOT silently merge old answers into the new direction.
+
+### E2. User Rejects Confirmation (Phase 2 → Phase 1)
+- **Signal**: At Phase 2, user replies with disagreement, additions, or a new constraint.
+- **Action**:
+  1. Do NOT regenerate the full requirement summary from scratch.
+  2. Identify ONLY the specific points the user rejected.
+  3. Re-enter Phase 1 *scoped to those points*. Continue One-Question-at-a-Time on that branch only.
+  4. Re-summarize and ask for confirmation again.
+
+### E3. Spec Gap Discovered During Implementation (Phase 4 → Phase 3)
+- **Signal**: A task cannot be completed without a decision not covered by `spec.md`, OR existing spec contradicts reality.
+- **Action**:
+  1. Pause the current task. Do NOT improvise the missing decision in code.
+  2. Update `spec.md` (and `design.md` if applicable). Roll status back: `in_progress → draft`.
+  3. Re-run Phase 2 confirmation **only for the changed sections** (diff-style summary).
+  4. Once approved, set status back to `in_progress` and resume the paused task.
+
+### E4. Repeated Verification Failure (Phase 5)
+- **Signal**: The same `checklist.md` item fails verification more than once.
+- **Action** (in order):
+  1. **Round 1 fail** → add a fix task to `tasks.md`, implement, re-verify.
+  2. **Round 2 fail** → re-examine whether the checklist item is correctly specified. If the criterion itself is flawed, update `checklist.md` and re-confirm with user (Phase 2 mini-loop).
+  3. **Round 3 fail** → STOP. Escalate to user with the failure history and ask whether to (a) split into a new requirement, (b) downgrade the criterion, or (c) abandon. Never enter a 4th retry silently.
+
+### E5. Session Resumption After Interruption
+- **Signal**: User returns to a requirement after a gap (new session, switched branch, etc.).
+- **Action**:
+  1. BEFORE asking anything, read `sdd/specs/<requirement-name>/spec.md` frontmatter `status`.
+  2. Resume according to the state machine:
+     - `draft` → re-display spec, ask for Phase 2 confirmation.
+     - `in_progress` → open `tasks.md`, find the first unchecked task, propose continuation.
+     - `completed` → confirm whether the user wants a new change record (`changes/`) or a brand-new requirement.
+  3. Do NOT restart Phase 1 from scratch when status ≠ `pending`.
 
 ---
 
@@ -188,6 +277,25 @@ Present the generated files to the user for review. Do NOT proceed to implementa
 - All newly created tasks in `tasks.md` and checklists in both `spec.md` and `checklist.md` must use Markdown task lists and be unchecked by default (`- [ ]`).
 - When a task is completed, update its status to checked (`- [x]`).
 - When ALL tasks and checklists for a requirement are checked (`- [x]`), its status MUST be updated to `completed` in BOTH the `spec.md` YAML Frontmatter AND the global registry `sdd/project.md`.
+
+## Status State Machine
+
+Allowed transitions:
+
+| From | To | Condition |
+|------|-----|-----------|
+| `pending` | `draft` | User confirms requirement intent |
+| `draft` | `draft` | User rejects Phase 2 confirmation; re-grill rejected points only (see E2) |
+| `draft` | `in_progress` | User approves spec generation |
+| `in_progress` | `draft` | Implementation reveals spec gaps (update spec first) |
+| `in_progress` | `completed` | All tasks AND all checklist items verified |
+| `completed` | `in_progress` | ONLY if user reports a verified bug or requests an unplanned enhancement |
+| `completed` | `archived` | User explicitly requests archiving, or feature is deprecated |
+
+**Forbidden transitions** (NEVER do these):
+- `pending` → `completed` (must go through draft and in_progress)
+- `draft` → `completed` (must implement and verify)
+- Any state → `archived` without user explicit request
 
 ## Archiving Requirements
 

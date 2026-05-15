@@ -1,9 +1,9 @@
 ---
 id: "{{FEATURE_ID}}"
 status: pending # [pending | draft | in_progress | completed | archived]
-impact_radius: 
-  - "src/renderer/src/features/..."
-  - "src/main/..."
+impact_radius:
+  - "<module-or-path-1>"
+  - "<module-or-path-2>"
 dependencies:
   - "none"
 ---
